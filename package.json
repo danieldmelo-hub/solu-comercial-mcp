@@ -1,0 +1,16 @@
+{
+  "name": "solu-comercial-mcp",
+  "version": "1.0.0",
+  "description": "MCP SOLU Comercial — cria e atualiza Leads, Propostas e Contratos no ERP (Base44) direto do Claude Code.",
+  "type": "module",
+  "bin": {
+    "solu-comercial-mcp": "index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.23.8"
+  }
+}
