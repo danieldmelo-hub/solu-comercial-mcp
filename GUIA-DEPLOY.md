@@ -12,10 +12,10 @@ direto no ERP da SOLU (Base44). Escopo seguro: só **lê, cria e atualiza** — 
    - **Public** (recomendado — assim o `npx` instala sem login; não há segredo no código)
    - NÃO marque "Add README/.gitignore/license" (tem que nascer vazio)
 
-2. Envie o código (troque SEU_USUARIO):
+2. Envie o código (troque danieldmelo-hub):
    ```bash
    cd /Users/danielmelo/Desktop/CLAUDE/solu-comercial-mcp
-   git remote add origin https://github.com/SEU_USUARIO/solu-comercial-mcp.git
+   git remote add origin https://github.com/danieldmelo-hub/solu-comercial-mcp.git
    git push -u origin main
    ```
 
@@ -37,11 +37,11 @@ pegam a versão nova na próxima sessão.
 
 Pré-requisitos: Node.js 18+ (`node -v`) e Claude Code instalado.
 
-Um comando só (troque SEU_USUARIO e A_CHAVE):
+Um comando só (troque danieldmelo-hub e A_CHAVE):
 ```bash
 claude mcp add solu-comercial --scope user \
   --env BASE44_API_KEY=A_CHAVE \
-  -- npx -y github:SEU_USUARIO/solu-comercial-mcp
+  -- npx -y github:danieldmelo-hub/solu-comercial-mcp
 ```
 
 Teste: abra o Claude Code e peça *"testa a conexão do SOLU Comercial"* → deve responder `ok: true`.

@@ -39,10 +39,10 @@ Peça a chave do comercial ao Daniel e troque em `SUA_CHAVE`:
 ```bash
 claude mcp add solu-comercial --scope user \
   --env BASE44_API_KEY=SUA_CHAVE \
-  -- npx -y github:SEU_USUARIO/solu-comercial-mcp
+  -- npx -y github:danieldmelo-hub/solu-comercial-mcp
 ```
 
-> Troque `SEU_USUARIO` pelo dono do repositório no GitHub.
+> Troque `danieldmelo-hub` pelo dono do repositório no GitHub.
 > `--scope user` deixa o MCP disponível em **todos** os seus projetos do Claude Code.
 > Quando o Daniel atualizar o código (git push), sua próxima sessão já pega a versão nova.
 
@@ -71,7 +71,7 @@ Em vez do passo 3, dá pra editar `~/.claude.json` (ou o `.mcp.json` do projeto)
   "mcpServers": {
     "solu-comercial": {
       "command": "node",
-      "args": ["/Users/SEU_USUARIO/solu-comercial-mcp/index.js"],
+      "args": ["/Users/danieldmelo-hub/solu-comercial-mcp/index.js"],
       "env": {
         "BASE44_API_KEY": "SUA_CHAVE",
         "BASE44_APP_ID": "690e523c4894b10373254ffc"
