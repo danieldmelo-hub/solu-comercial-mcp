@@ -71,7 +71,7 @@ Em vez do passo 3, dá pra editar `~/.claude.json` (ou o `.mcp.json` do projeto)
   "mcpServers": {
     "solu-comercial": {
       "command": "node",
-      "args": ["/Users/danieldmelo-hub/solu-comercial-mcp/index.js"],
+      "args": ["/Users/SEU_USUARIO_MAC/solu-comercial-mcp/index.js"],
       "env": {
         "BASE44_API_KEY": "SUA_CHAVE",
         "BASE44_APP_ID": "690e523c4894b10373254ffc"
