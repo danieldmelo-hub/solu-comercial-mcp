@@ -42,7 +42,6 @@ claude mcp add solu-comercial --scope user \
   -- npx -y github:danieldmelo-hub/solu-comercial-mcp
 ```
 
-> Troque `danieldmelo-hub` pelo dono do repositório no GitHub.
 > `--scope user` deixa o MCP disponível em **todos** os seus projetos do Claude Code.
 > Quando o Daniel atualizar o código (git push), sua próxima sessão já pega a versão nova.
 
