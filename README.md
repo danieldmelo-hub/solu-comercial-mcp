@@ -37,9 +37,7 @@ Um comando só. O `npx` baixa o MCP do GitHub sozinho e mantém atualizado.
 Peça a chave do comercial ao Daniel e troque em `SUA_CHAVE`:
 
 ```bash
-claude mcp add solu-comercial --scope user \
-  --env BASE44_API_KEY=SUA_CHAVE \
-  -- npx -y github:danieldmelo-hub/solu-comercial-mcp
+claude mcp add solu-comercial --scope user --env BASE44_API_KEY=SUA_CHAVE -- npx -y https://codeload.github.com/danieldmelo-hub/solu-comercial-mcp/tar.gz/refs/heads/main
 ```
 
 > `--scope user` deixa o MCP disponível em **todos** os seus projetos do Claude Code.

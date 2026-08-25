@@ -39,9 +39,7 @@ Pré-requisitos: Node.js 18+ (`node -v`) e Claude Code instalado.
 
 Um comando só (troque danieldmelo-hub e A_CHAVE):
 ```bash
-claude mcp add solu-comercial --scope user \
-  --env BASE44_API_KEY=A_CHAVE \
-  -- npx -y github:danieldmelo-hub/solu-comercial-mcp
+claude mcp add solu-comercial --scope user --env BASE44_API_KEY=SUA_CHAVE -- npx -y https://codeload.github.com/danieldmelo-hub/solu-comercial-mcp/tar.gz/refs/heads/main
 ```
 
 Teste: abra o Claude Code e peça *"testa a conexão do SOLU Comercial"* → deve responder `ok: true`.
