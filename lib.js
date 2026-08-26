@@ -47,6 +47,7 @@ async function getAll(entity, cap = 2000) {
 }
 
 const norm = (s) => (s || "").toString().trim().toLowerCase();
+const digits = (s) => (s || "").toString().replace(/\D/g, "");
 const nowISO = () => new Date().toISOString();
 
 // ───────────────────────── Conexão ─────────────────────────
@@ -100,6 +101,36 @@ export async function buscarLeads({ termo, status, limite = 20 } = {}) {
 }
 
 export async function criarLead(input) {
+  // Anti-duplicacao: se ja existe lead com o mesmo telefone (so digitos) ou o
+  // mesmo nome, nao cria um card duplicado — devolve o existente para o
+  // assistente atualizar (atualizar_lead / adicionar_observacao_lead).
+  const novoTel = digits(input.phone);
+  const novoNome = norm(input.name);
+  if (novoTel.length >= 8 || novoNome) {
+    const existentes = await getAll("Lead");
+    const dup = existentes.find((l) => {
+      const telIgual = novoTel.length >= 8 && digits(l.phone) === novoTel;
+      const nomeIgual = novoNome && norm(l.name) === novoNome;
+      return telIgual || nomeIgual;
+    });
+    if (dup) {
+      return {
+        duplicate: true,
+        message:
+          `Ja existe um lead para "${dup.name}" (${dup.phone || "sem telefone"}). ` +
+          `NAO criei card duplicado — use atualizar_lead / adicionar_observacao_lead no id abaixo.`,
+        existing: {
+          id: dup.id,
+          name: dup.name,
+          phone: dup.phone,
+          neighborhood: dup.neighborhood,
+          status: dup.status,
+          commercial_status: dup.commercial_status,
+        },
+      };
+    }
+  }
+
   const body = {
     name: input.name,
     phone: input.phone,
@@ -114,7 +145,8 @@ export async function criarLead(input) {
       : undefined,
   };
   Object.keys(body).forEach((k) => body[k] === undefined && delete body[k]);
-  return b44("POST", "Lead", body);
+  const created = await b44("POST", "Lead", body);
+  return { duplicate: false, created };
 }
 
 export async function atualizarLead({ id, ...campos }) {
@@ -180,7 +212,7 @@ export async function criarProposta(input) {
   if (input.lead_id) {
     try {
       await b44("PUT", `Lead/${input.lead_id}`, {
-        commercial_status: "proposta",
+        commercial_status: "orcamento",
         proposal_value: total_value,
         ...(body.sent_date ? { proposal_sent_date: body.sent_date } : {}),
       });
@@ -240,7 +272,7 @@ export async function criarContrato(input) {
   const contrato = await b44("POST", "Contract", body);
   if (input.lead_id && body.status === "assinado") {
     try {
-      await b44("PUT", `Lead/${input.lead_id}`, { commercial_status: "venda", status: "ganho", total_value: input.total_value });
+      await b44("PUT", `Lead/${input.lead_id}`, { commercial_status: "ativo", status: "ganho", total_value: input.total_value });
     } catch (e) {
       /* não bloqueia */
     }

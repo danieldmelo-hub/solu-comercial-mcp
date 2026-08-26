@@ -38,7 +38,7 @@ server.tool(
 server.tool(
   "listar_produtos",
   "Lista os produtos/pacotes ativos da SOLU com faixas de preço. Use para montar propostas com preços reais.",
-  { product_type: z.enum(["som_ambiente", "painel_led", "flap_tv", "automacao_residencial", "home_theater"]).optional() },
+  { product_type: z.enum(["som_ambiente", "painel_led", "flap_tv", "automacao_residencial", "home_theater", "rede", "cftv", "video_porteiro", "mao_de_obra", "projeto_assessoria"]).optional() },
   wrap((a) => solu.listarProdutos(a)),
 );
 
@@ -63,7 +63,7 @@ server.tool(
     neighborhood: z.string().optional().describe("Bairro/região"),
     address: z.string().optional(),
     origin: z.string().optional().describe("De onde veio (Instagram, Indicação, Site...)"),
-    product_type: z.enum(["som_ambiente", "painel_led", "flap_tv", "automacao_residencial", "home_theater"]).optional(),
+    product_type: z.enum(["som_ambiente", "painel_led", "flap_tv", "automacao_residencial", "home_theater", "rede", "cftv", "video_porteiro", "mao_de_obra", "projeto_assessoria"]).optional(),
     status: z.string().optional(),
     commercial_status: z.string().optional(),
     observacao: z.string().optional().describe("Primeira observação/anotação"),
@@ -78,7 +78,7 @@ server.tool(
   {
     id: z.string().describe("ID do lead"),
     status: z.enum(["novo", "contatado", "qualificado", "proposta_enviada", "negociacao", "ganho", "perdido"]).optional(),
-    commercial_status: z.enum(["novo", "proposta", "revisao", "enviado", "reuniao_showroom", "venda", "financeiro", "concluido", "perdido"]).optional(),
+    commercial_status: z.enum(["entrada", "orcamento", "enviado", "reuniao", "ativo", "finalizado", "pos_venda", "frio", "desqualificado", "arquivado"]).optional(),
     proposal_value: z.number().optional(),
     total_value: z.number().optional(),
     proposal_sent_date: z.string().optional(),
@@ -105,7 +105,7 @@ server.tool(
 // ── Propostas ──
 server.tool(
   "criar_proposta",
-  "Cria uma proposta no ERP (com produtos, valores e o documento gerado em markdown). Se informar lead_id, move o lead para 'proposta' no pipeline automaticamente.",
+  "Cria uma proposta no ERP (com produtos, valores e o documento gerado em markdown). Se informar lead_id, move o lead para 'orçamento' no pipeline automaticamente.",
   {
     client_name: z.string(),
     lead_id: z.string().optional(),
