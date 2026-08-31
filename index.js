@@ -197,6 +197,47 @@ server.tool(
   wrap((a) => solu.atualizarContrato(a)),
 );
 
+// ── Acesso geral ao sistema (navegar/ler/gravar qualquer entidade — SEM delete) ──
+server.tool(
+  "listar_entidades",
+  "Lista as entidades (tabelas) do ERP que dá para consultar: Obras (Project), Agenda (Visit), Backoffice, Estoque (Inventory), CRM (Lead), POPs (Task), etc.",
+  {},
+  wrap(() => solu.listarEntidades()),
+);
+
+server.tool(
+  "consultar",
+  "Consulta QUALQUER entidade do ERP para navegar/ler dados (Obras=Project, Agenda=Visit, Backoffice=BackofficeItem, Estoque=Inventory, CRM=Lead, POPs=Task...). Aceita filtro simples e ordenação.",
+  {
+    entidade: z.string().describe("Nome da entidade. Ex.: Project, Visit, BackofficeItem, Inventory, Lead, Task"),
+    filtro: z.record(z.any()).optional().describe("Filtro simples { campo: valor } — string = contém; resto = igualdade"),
+    ordenar: z.string().optional().describe("Campo p/ ordenar; prefixe '-' para desc (ex.: -created_date)"),
+    limite: z.number().optional().describe("Máx. de registros retornados (padrão 50)"),
+  },
+  wrap((a) => solu.consultar(a)),
+);
+
+server.tool(
+  "obter_registro",
+  "Obtém um registro específico de qualquer entidade pelo id.",
+  { entidade: z.string(), id: z.string() },
+  wrap((a) => solu.obterRegistro(a)),
+);
+
+server.tool(
+  "criar_registro",
+  "Cria um registro em QUALQUER entidade do ERP (uso avançado; sem delete). Prefira as ferramentas específicas — criar_lead, criar_proposta, criar_contrato — quando existirem.",
+  { entidade: z.string(), dados: z.record(z.any()).describe("Objeto com os campos do registro") },
+  wrap((a) => solu.criarRegistro(a)),
+);
+
+server.tool(
+  "atualizar_registro",
+  "Atualiza um registro em QUALQUER entidade do ERP pelo id (deep-merge; sem delete).",
+  { entidade: z.string(), id: z.string(), dados: z.record(z.any()).describe("Campos a atualizar") },
+  wrap((a) => solu.atualizarRegistro(a)),
+);
+
 const transport = new StdioServerTransport();
 await server.connect(transport);
 console.error("[solu-comercial] MCP no ar (stdio).");

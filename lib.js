@@ -1,7 +1,7 @@
 // SOLU Comercial — cliente Base44 + lógica de negócio.
 // Sem dependências externas: usa fetch nativo (Node >= 18).
-// Escopo PROPOSITAL: só lê/cria/atualiza Lead, Proposal, Contract, Product.
-// NÃO expõe delete nem toca em outras entidades — guarda-corpo de segurança.
+// Escopo: acesso FULL de leitura/escrita ao ERP (navega qualquer entidade).
+// Guarda-corpo de segurança: NÃO expõe delete em nenhum lugar.
 
 const APP_ID = process.env.BASE44_APP_ID || "690e523c4894b10373254ffc";
 const API_KEY = process.env.BASE44_API_KEY || "";
@@ -290,4 +290,63 @@ export async function atualizarContrato({ id, ...campos }) {
   for (const k of permitidos) if (campos[k] !== undefined) body[k] = campos[k];
   if (Object.keys(body).length === 0) throw new Error("nenhum campo válido para atualizar");
   return b44("PUT", `Contract/${id}`, body);
+}
+
+
+// ───────────────────────── Acesso geral ao sistema ─────────────────────────
+// Navegar/ler/gravar QUALQUER entidade do ERP. Sem delete (guarda-corpo).
+
+// Entidades conhecidas (orientação; `consultar` aceita qualquer nome).
+export const ENTIDADES = [
+  "Lead", "Project", "Visit", "BackofficeItem", "BackofficeConfig",
+  "Inventory", "Product", "Proposal", "Contract", "Task", "SupportTicket", "User",
+];
+
+export async function listarEntidades() {
+  return {
+    entidades: ENTIDADES,
+    dica: "Use 'consultar' com o nome da entidade para ler os registros. Ex.: Project = Obras, Visit = Agenda, Task = POPs.",
+  };
+}
+
+// Consulta genérica: lê a entidade, aplica filtro simples e ordenação, devolve os primeiros `limite`.
+export async function consultar({ entidade, filtro, ordenar, limite = 50 } = {}) {
+  if (!entidade) throw new Error("informe a entidade (ex.: Project, Visit, Inventory)");
+  let recs = await getAll(entidade);
+  if (filtro && typeof filtro === "object") {
+    recs = recs.filter((r) =>
+      Object.entries(filtro).every(([k, v]) => {
+        const rv = r?.[k];
+        if (typeof rv === "string" && typeof v === "string") return norm(rv).includes(norm(v));
+        return rv === v;
+      }),
+    );
+  }
+  if (ordenar) {
+    const desc = ordenar.startsWith("-");
+    const key = desc ? ordenar.slice(1) : ordenar;
+    recs = [...recs].sort((a, b) => {
+      const av = a?.[key], bv = b?.[key];
+      if (av === bv) return 0;
+      return (av > bv ? 1 : -1) * (desc ? -1 : 1);
+    });
+  }
+  return { entidade, total_encontrado: recs.length, registros: recs.slice(0, limite) };
+}
+
+export async function obterRegistro({ entidade, id } = {}) {
+  if (!entidade || !id) throw new Error("informe entidade e id");
+  return b44("GET", `${entidade}/${id}`);
+}
+
+export async function criarRegistro({ entidade, dados } = {}) {
+  if (!entidade) throw new Error("informe a entidade");
+  if (!dados || typeof dados !== "object") throw new Error("informe os dados do registro");
+  return b44("POST", entidade, dados);
+}
+
+export async function atualizarRegistro({ entidade, id, dados } = {}) {
+  if (!entidade || !id) throw new Error("informe entidade e id");
+  if (!dados || typeof dados !== "object") throw new Error("informe os dados a atualizar");
+  return b44("PUT", `${entidade}/${id}`, dados);
 }

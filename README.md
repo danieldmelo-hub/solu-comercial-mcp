@@ -8,7 +8,7 @@ o Claude Code grava tudo direto no sistema — **Leads, Propostas e Contratos**.
 Claude Code (vendedor)  →  MCP SOLU Comercial  →  API Base44  →  ERP (Leads / Propostas / Contratos)
 ```
 
-## Ferramentas disponíveis (11)
+## Ferramentas disponíveis (16)
 
 | Área | Ferramenta | O que faz |
 |---|---|---|
@@ -24,8 +24,20 @@ Claude Code (vendedor)  →  MCP SOLU Comercial  →  API Base44  →  ERP (Lead
 | Contratos | `criar_contrato` | Cria contrato; se "assinado", marca o lead como venda/ganho |
 | Contratos | `atualizar_contrato` | Muda status/valores/documento |
 
+### Acesso geral ao sistema (navegar tudo)
+
+Além das ferramentas comerciais, o MCP tem **acesso full de leitura/escrita** ao ERP:
+
+| Ferramenta | O que faz |
+|---|---|
+| `listar_entidades` | Lista as tabelas do sistema (Obras, Agenda, Backoffice, Estoque, CRM, POPs…) |
+| `consultar` | Lê QUALQUER entidade (com filtro/ordenação) — ex.: obras em andamento, visitas da semana, estoque |
+| `obter_registro` | Pega um registro pelo id |
+| `criar_registro` | Cria em qualquer entidade (uso avançado) |
+| `atualizar_registro` | Atualiza qualquer registro pelo id |
+
 > **Segurança:** o MCP **só lê, cria e atualiza** Leads, Propostas, Contratos e Produtos.
-> Não apaga nada e não toca no resto do sistema. É um caminho seguro por design.
+> **Nunca apaga nada** (sem delete em lugar nenhum) — essa é a trava de segurança que fica.
 
 ## Instalação (uma vez por Mac)
 
